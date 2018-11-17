@@ -18,7 +18,7 @@ function getData() {
     }).done(function(responseObject){
         // Note that this is temporarily named "winterPark" until functionality is built in to chose different resorts
         let winterPark = createNewResortObject(responseObject);
-        console.log(createHTMLString(winterPark));
+        appendResortData(createHTMLString(winterPark));
     }).fail(function(errorObject) {
         console.log(errorObject);
     });
@@ -43,7 +43,7 @@ class Resort {
 }
 
 function createNewResortObject(responseObject) {
-    let myResort = new Resort(
+    return new Resort(
         responseObject.Name,
         responseObject.SnowReport.BaseArea.BaseIn,
         responseObject.SnowReport.TotalOpenTrails,
@@ -58,22 +58,23 @@ function createNewResortObject(responseObject) {
         responseObject.SnowReport.BaseArea.Last72HoursIn,
         responseObject.SnowReport.BaseArea.Last7DaysIn
     );
-    return myResort;
 }
 
 function createHTMLString(resort) {
-    let resortReport =
-        "<h2>" + resort.resortName + "</h2>" +
+    return "<h2>" + resort.resortName + "</h2>" +
         "       <ul>" +
         "           <li>Base Snow: " + resort.snowBase + "</li>" +
         "           <li>24 Hour Snowfall: " + resort.snowfall24H + "</li>" +
         "           <li>48 Hour Snowfall: " + resort.snowfall48H + "</li>" +
         "           <li>72 Hour Snowfall: " + resort.snowfall72H + "</li>" +
         "           <li>7 Day Snowfall: " + resort.snowfall7D + "</li>" +
-        "           <li>Season Total Snowfall: " + resort.snowBase + "</li>" +
+        "           <li>Season Total Snowfall: " + resort.snowfallSeason + "</li>" +
         "           <li>Trails Open: " + resort.trailsOpen + "/" + resort.trailsTotal + "</li>" +
         "           <li>Lifts Open: " + resort.liftsOpen + "/" + resort.liftsTotal + "</li>" +
         "           <li>Acres Open: " + resort.acresOpen + "/" + resort.acresTotal + "</li>" +
         "       </ul>";
-    return resortReport;
+}
+
+function appendResortData(htmlString) {
+    $('#resort').append(htmlString);
 }
