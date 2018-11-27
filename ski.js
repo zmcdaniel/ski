@@ -1,8 +1,7 @@
 $(document).ready(function(){
     console.log("Ready to go!");
-    for (var i=1; i<12; i++) {
-        getData(i);
-    }
+    getData(43);
+    getData(1);
 });
 
 /**
@@ -18,11 +17,10 @@ function getData(id) {
             resortId: id
         }
     }).done(function(responseObject){
-        // Note that this is temporarily named "winterPark" until functionality is built in to chose different resorts
-        let winterPark = createNewResortObject(responseObject);
-        appendResortData(winterPark.createHTMLString());
+        let resort = createNewResortObject(responseObject);
+        appendData(resort.createHTMLString());
     }).fail(function(errorObject) {
-        console.log(errorObject);
+        appendData(createErrorMessage(errorObject));
     });
 }
 
@@ -88,6 +86,37 @@ function createNewResortObject(responseObject) {
     );
 }
 
-function appendResortData(htmlString) {
+function appendData(htmlString) {
     $('#resort').append(htmlString);
+}
+
+/**
+ * Uses error object to build a string, preparing it to be appended to the DOM for users to have error context
+ * @param errorObject
+ * @return String
+ */
+function createErrorMessage(errorObject) {
+    let errorMessage = '', status = errorObject.status;
+
+    switch (status) {
+        case 400:
+            errorMessage += "Bad request.";
+            break;
+        case 401:
+            errorMessage += "Unauthorized. I'm calling the cops.";
+            break;
+        case 403:
+            errorMessage += "Forbidden";
+            break;
+        case 404:
+            errorMessage += "Page not found.";
+            break;
+        case 500:
+            errorMessage += "Internal service error.";
+            break;
+        case 503:
+            errorMessage += "Service is unavailable.";
+            break;
+    }
+    return errorMessage;
 }
