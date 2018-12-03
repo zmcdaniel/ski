@@ -1,11 +1,14 @@
 $(document).ready(function(){
     console.log("Ready to go!");
-    getData(43);
-    getData(1);
+
+    for (let i=0; i < 100; i++) {
+        getData(i);
+        logResort(i);
+    }
 });
 
 /**
- * Fetching snow report using AJAX
+ * Fetching snow report
  */
 function getData(id) {
     let uri = "https://snowreporting.herokuapp.com/feed";
@@ -25,9 +28,18 @@ function getData(id) {
 }
 
 // todo: create Weather class
+class Weather {
+    constructor(snowfallSeason, snowfall24H, snowfall48H, snowfall72H, snowfall7D) {
+        this.snowfallSeason = snowfallSeason;
+        this.snowfall24H = snowfall24H;
+        this.snowfall48H = snowfall48H;
+        this.snowfall72H = snowfall72H;
+        this.snowfall7D = snowfall7D;
+    }
+}
 
 class Resort {
-    constructor(resortName, snowBase, trailsOpen, trailsTotal, acresOpen, acresTotal, liftsOpen, liftsTotal, snowfallSeason, snowfall24H, snowfall48H, snowfall72H, snowfall7D) {
+    constructor(resortName, snowBase, trailsOpen, trailsTotal, acresOpen, acresTotal, liftsOpen, liftsTotal) {
         this.resortName = resortName;
 
         this.snowBase = snowBase;
@@ -40,12 +52,6 @@ class Resort {
 
         this.liftsOpen = liftsOpen;
         this.liftsTotal = liftsTotal;
-
-        this.snowfallSeason = snowfallSeason;
-        this.snowfall24H = snowfall24H;
-        this.snowfall48H = snowfall48H;
-        this.snowfall72H = snowfall72H;
-        this.snowfall7D = snowfall7D;
     }
 
     createHTMLString() {
@@ -62,13 +68,10 @@ class Resort {
             "           <li>Acres Open: " + this.acresOpen + "/" + this.acresTotal + "</li>" +
             "       </ul>";
     }
-
-    getPercentage(open, total) {
-        return (open * 100) / total;
-    }
 }
 
 function createNewResortObject(responseObject) {
+
     return new Resort(
         responseObject.Name,
         responseObject.SnowReport.BaseArea.BaseIn,
